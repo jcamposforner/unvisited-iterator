@@ -2,12 +2,12 @@ use std::collections::{VecDeque, HashSet};
 use std::hash::Hash;
 
 #[derive(Default)]
-pub struct UnvisitedIterator<T: Eq + Hash> {
+pub struct UnvisitedIterator<T: Eq + Hash + Clone> {
     visited: HashSet<T>,
     inner: VecDeque<T>,
 }
 
-impl<T: Eq + Hash> UnvisitedIterator<T> {
+impl<T: Eq + Hash + Clone> UnvisitedIterator<T> {
     pub fn from_value(value: T) -> Self {
         let mut inner = VecDeque::new();
         inner.push_front(value);
@@ -52,12 +52,12 @@ impl<T: Eq + Hash + Clone> Iterator for UnvisitedIterator<T> {
 }
 
 
-pub trait IntoUnvisitedIterator<T: Eq + Hash> {
+pub trait IntoUnvisitedIterator<T: Eq + Hash + Clone> {
     fn skip_visited(self) -> UnvisitedIterator<T>;
 }
 
 
-impl<T: Eq + Hash, Iter: Iterator<Item = T>> IntoUnvisitedIterator<T> for Iter
+impl<T: Eq + Hash + Clone, Iter: Iterator<Item = T>> IntoUnvisitedIterator<T> for Iter
 {
     fn skip_visited(self) -> UnvisitedIterator<T>
     {
